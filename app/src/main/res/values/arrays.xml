@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="desc">
+        <item>YoRHa No.2 Type B is an all-purpose battle android combining the melee-based Type A and ranged-based Type G equipment loadouts</item>
+        <item>YoRHa No.9 Type S is a scanner-type android with additional sensor capabilities and comprehensive hacking suite</item>
+    </string-array>
+</resources>
