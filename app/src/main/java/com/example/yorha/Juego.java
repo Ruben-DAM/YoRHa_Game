@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Juego extends SurfaceView implements SurfaceHolder.Callback, SurfaceView.OnTouchListener{
     private SurfaceHolder holder;
@@ -27,7 +28,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, Surfac
     public Bitmap machine;
     private MediaPlayer music;
     private Context contexto;
-    private Android android;
+    public Android android;
     private Joystick joystick;
     private boolean end = false;
     public int screenW;
@@ -36,7 +37,10 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, Surfac
     private int mapH;
     private int mapPosY;
     private int frame_count=0;
+    private int frames_to_shoot = 0;
+    private int ch_fire_rate = BucleJuego.MAX_FPS/6;
     private ArrayList<Machine> enemies = new ArrayList<>();
+    private ArrayList<Bullet> character_bullets = new ArrayList<>();
     public Juego(AppCompatActivity context) {
         super(context);
         contexto = context;
@@ -116,11 +120,34 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, Surfac
 
             //Move character
             android.move(joystick);
+
+            //Make character shoot
+            if(frames_to_shoot == 0){
+                shootPattern();
+                frames_to_shoot = ch_fire_rate;
+            }
+            frames_to_shoot--;
             
             //Spawn enemies
             if(frame_count == 30){
                 enemies.add(new Machine((screenW-machine.getWidth())/2,100 + machine.getHeight(),this));
             }
+
+            //Move character bullets
+            for(Iterator<Bullet> bullets = character_bullets.iterator();bullets.hasNext();){
+                Bullet bullet = bullets.next();
+                bullet.move(frame_count);
+                if(bullet.outOfBounds())
+                    bullets.remove();
+            }
+        }
+    }
+
+    private void shootPattern() {
+        for (int i = 6; i < 13; i++) {
+            int bulletX = (int)(70*Math.cos(Math.toRadians(30 * i))+android.getCenterX());
+            int bulletY = (int)(character.getHeight()/2*Math.sin(Math.toRadians(30 * i))+android.getCenterY());
+            character_bullets.add(new Bullet(this,bulletX,bulletY,frame_count,1));
         }
     }
 
@@ -138,6 +165,10 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, Surfac
         for (Machine enemy:
              enemies) {
             enemy.draw(canvas);
+        }
+
+        for (Bullet bullet: character_bullets) {
+            bullet.draw(canvas);
         }
     }
 
