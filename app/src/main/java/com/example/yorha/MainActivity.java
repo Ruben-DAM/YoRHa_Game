@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,10 +20,14 @@ public class MainActivity extends AppCompatActivity {
     Button btnAceptar;
     Button btnCambiar;
     public int personaje = 0;
+    MediaPlayer musica;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        musica = MediaPlayer.create(this,R.raw.peaceful_sleep);
+        musica.start();
 
         portrait = findViewById(R.id.imageView);
         descT = findViewById(R.id.textViewDesc);
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         btnCambiar.setBackgroundColor(getResources().getColor(R.color.black));
 
         portraitAnimation();
+
 
         btnCambiar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                musica.release();
                 Intent juego = new Intent(getApplication(),GameActivity.class);
                 juego.putExtra("Personaje",personaje);
                 startActivity(juego);
