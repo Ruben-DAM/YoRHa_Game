@@ -59,7 +59,7 @@ public class BucleJuego extends Thread {
                     // Actualizar estado del juego
                     juego.actualizar();
                     // renderizar la imagen
-                    juego.renderizar(canvas);
+                    juego.render(canvas);
                     iteraciones++;
                     // Calcular cuánto tardó el ciclo
                     tiempoDiferencia = System.currentTimeMillis() - tiempoComienzo;

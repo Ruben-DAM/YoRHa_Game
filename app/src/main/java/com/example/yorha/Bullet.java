@@ -6,38 +6,51 @@ import android.graphics.Paint;
 
 public class Bullet {
     public int posX, posY;
-    private Juego juego;
-    private float velY;
-    private float velX;
+    public Juego juego;
+    protected double vel;
+    protected double angle;
+    private int color;
+    private int radius;
     private int creation_frame;
-    public int damage;
-    public int radius = 10;
 
-    public Bullet(Juego juego,int posX, int posY, int frame, int damage) {
+    public Bullet(Juego juego,int posX, int posY, double vel, double angle,int color, int radius, int frame) {
         this.posX = posX;
         this.posY = posY;
         this.juego = juego;
         this.creation_frame = frame;
-        this.damage = damage;
+        this.vel = vel;
+        this.angle = angle;
+        this.color = color;
+        this.radius = radius;
 
-        velX = (posX-(juego.android.getCenterX()))*juego.screenW/100/BucleJuego.MAX_FPS;
-        velY = juego.screenH/2/BucleJuego.MAX_FPS;
     }
 
     public void draw(Canvas canvas){
         Paint p = new Paint();
-        p.setColor(Color.WHITE);
+        p.setColor(Color.YELLOW);
+        canvas.drawCircle(posX,posY,radius+3,p);
+        p.setColor(color);
         canvas.drawCircle(posX,posY,radius,p);
     }
 
     public void move(int actual_frame){
-        if(actual_frame >= creation_frame+15 ){
-            posX += velX;
+        if(creation_frame+30 <= actual_frame) {
+            posX += vel * Math.cos(angle);
+            posY += vel * Math.sin(angle);
+        } else {
+            posY -= vel;
         }
-        posY -= velY;
     }
 
     public boolean outOfBounds() {
-        return (posY < 0 || posX < 0 || posX > juego.screenW);
+        return (posY < 0 || posY > juego.screenH-400-(radius*2) || posX < 0 || posX > juego.screenW);
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public double getVel() {
+        return vel;
     }
 }

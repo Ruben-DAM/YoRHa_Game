@@ -3,20 +3,20 @@ package com.example.yorha;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class Android {
     private double maxVelX;
     private double maxVelY;
     private int posX;
     private int posY;
-    private int centerX;
-    private int centerY;
+    public int centerX;
+    public int centerY;
+    public int radius = 20;
     private double velX;
     private double velY;
     private Juego juego;
     private Paint p;
-    public void special(){    }
+    public int life = 3;
     public void move(Joystick j){
         velX = j.moveX * maxVelX;
         velY = j.moveY * maxVelY;
@@ -28,16 +28,16 @@ public class Android {
             posX=1;
         if(posX > juego.screenW - juego.character.getWidth())
             posX = juego.screenW - juego.character.getWidth();
-        if(posY < 100)
-            posY = 100;
+        if(posY < 400)
+            posY = 400;
         if(posY > juego.screenH - 400 - juego.character.getHeight())
             posY = juego.screenH - 400 - juego.character.getHeight();
     }
-    public void draw(Canvas canvas){
-        canvas.drawBitmap(juego.character,posX,posY,null);
+    public void draw(Canvas canvas, Paint paint){
+        canvas.drawBitmap(juego.character,posX,posY,paint);
         p = new Paint();
         p.setColor(Color.YELLOW);
-        canvas.drawCircle(centerX,centerY,20,p);
+        canvas.drawCircle(centerX,centerY,radius,p);
     }
     public Android(Juego j){
         juego = j;
@@ -45,8 +45,8 @@ public class Android {
         posY = juego.screenH - 400 - juego.character.getHeight();
         centerX = posX + juego.character.getWidth()/2;
         centerY = posY + juego.character.getHeight()/2;
-        maxVelX = juego.screenW/3/BucleJuego.MAX_FPS;
-        maxVelY = juego.screenH/4.5/BucleJuego.MAX_FPS;
+        maxVelX = juego.screenW/2/BucleJuego.MAX_FPS;
+        maxVelY = juego.screenH/4/BucleJuego.MAX_FPS;
     }
 
     public int getCenterX() {
@@ -55,5 +55,10 @@ public class Android {
 
     public int getCenterY() {
         return centerY;
+    }
+
+    public boolean damage() {
+        life--;
+        return life <= 0;
     }
 }
